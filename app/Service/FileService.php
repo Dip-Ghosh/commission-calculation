@@ -9,11 +9,12 @@ use App\Strategy\UserTypeStrategy;
 class FileService
 {
     use DepositTrait;
+
     private $userStrategy;
 
-    public function __construct( UserTypeStrategy $userStrategy )
+    public function __construct(UserTypeStrategy $userStrategy)
     {
-        $this->userStrategy       = $userStrategy;
+        $this->userStrategy = $userStrategy;
     }
 
     /**
@@ -22,7 +23,7 @@ class FileService
      * @param $file
      * @return array
      */
-    public function  getFileContent($file): array
+    public function getFileContent($file): array
     {
 
         $fileContent = [];
@@ -45,28 +46,24 @@ class FileService
     {
         $data = [];
 
-        if (!empty($fileContents))
-        {
-            foreach ($fileContents as  $fileContent)
-            {
-                $date                = date_format( date_create( $fileContent[0] ) ,"Y-m-d");
-                $userId              = $fileContent[1];
-                $UserType            = $fileContent[2];
-                $commissionType      = $fileContent[3];
-                $amount              = $fileContent[4];
-                $currency            = $fileContent[5];
-                $year                = explode( '-', $date )[0];
-                $isJanuary           = ( date("m", strtotime( $date ) ) === '01' );
+        if (!empty($fileContents)) {
+            foreach ($fileContents as $fileContent) {
+                $date = date_format(date_create($fileContent[0]), "Y-m-d");
+                $userId = $fileContent[1];
+                $UserType = $fileContent[2];
+                $commissionType = $fileContent[3];
+                $amount = $fileContent[4];
+                $currency = $fileContent[5];
+                $year = explode('-', $date)[0];
+                $isJanuary = (date("m", strtotime($date)) === '01');
 
-                $user                = $this->userStrategy->getUserType($UserType);
-                $OperationType       =  config('commission.operation_type');
+                $user = $this->userStrategy->getUserType($UserType);
+                $OperationType = config('commission.operation_type');
 
-                if ($commissionType === $OperationType[0])
-                {
+                if ($commissionType === $OperationType[0]) {
                     $data [] = $user->calculateWithdrawCommission($amount);
 
-            }
-                else {
+                } else {
                     $data [] = $this->getDepositCommission($amount);
                 }
 
@@ -74,39 +71,6 @@ class FileService
         }
 
         return $data;
-
-
-
-
-
-            $commissionFee = 0;
-//            $user = new UserController( $userId );
-//            if ( $kindOfUser === 'private' && $kindOfCommissionFee === 'withdraw' ) {
-//                // setWithdrawInWeekForPrivateUserByDate
-//                $commisionFee->setWithdrawInWeekForPrivateUserByDate( $userId, $date, $value, $currency );
-//                $withdrawInWeekForPrivateUser = $commisionFee->getWithdrawInWeekForPrivateUserByDate( $userId, $date );
-//                $lastWithdrawInWeekForPrivateUser = $withdrawInWeekForPrivateUser[ count( $withdrawInWeekForPrivateUser ) - 1 ];
-//                $exceeded1000 = $lastWithdrawInWeekForPrivateUser["exceeded1000"];
-//                $firstWeekOnDecemberFromBeforeYearValueInEuro = $commisionFee->getWeekOnDecemberFromBeforeYearValueInEuro( $userId, $year - 1 );
-//
-//                if ( $user->isFreeWithdraw( $withdrawInWeekForPrivateUser ) ) {
-//                    $commissionFee = $value * 0.3 / 100;
-//                } else if ( $isJanuary && $exceeded1000 <= 1000 && $firstWeekOnDecemberFromBeforeYearValueInEuro > 1000 ) {
-//                    $commissionFee = $value * 0.3 / 100;
-//                } else if ( $exceeded1000 > 0 ) {
-//                    // $commissionFee = 222222222;
-//                    $commissionFee = $exceeded1000 * 0.3 / 100;
-//                }
-//            } else if( $kindOfCommissionFee === 'deposit' ) {
-//                $commissionFee = $value * 0.03 / 100;
-//            } else if( $kindOfUser === 'business' ) {
-//                $commissionFee = $value * 0.5 / 100;
-//            }
-
-//            echo '<pre>';
-//            // var_dump( $row );
-//            var_dump( round( $commissionFee, 2 ) );
-//            echo '</pre>';
 
     }
 }

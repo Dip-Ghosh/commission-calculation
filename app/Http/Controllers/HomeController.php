@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FileValidationRequest;
 use App\Service\FileService;
-use Illuminate\Http\Request;
+
 
 class HomeController extends Controller
 {
@@ -20,7 +20,8 @@ class HomeController extends Controller
         return view('welcome');
     }
 
-    public function calculateCommission( FileValidationRequest $request )
+
+    public function calculateCommission(FileValidationRequest $request )
     {
 
         if (!file_exists($request->file) || ! is_readable($request->file))
@@ -29,9 +30,9 @@ class HomeController extends Controller
         }
 
         $fileContents = $this->fileProcess->getFileContent($request->file);
-        $fileContent = $this->fileProcess->processParams($fileContents);
+        $commission   = $this->fileProcess->processParams($fileContents);
 
-        return $fileContent;
+        return $commission;
 
 
     }
